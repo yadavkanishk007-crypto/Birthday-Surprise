@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
 
 const textBlocks = [
     {
@@ -26,6 +26,32 @@ const textBlocks = [
     }
 ];
 
+function TextBlock({ block, scrollYProgress, index }: { block: { lines: string[] }, scrollYProgress: MotionValue<number>, index: number }) {
+    const start = index * 0.33;
+    const end = start + 0.33;
+    const mid = start + 0.165;
+
+    const opacity = useTransform(scrollYProgress, [start, mid, end], [0, 1, 0]);
+    const y = useTransform(scrollYProgress, [start, mid, end], [50, 0, -50]);
+
+    return (
+        <motion.div
+            className="absolute inset-0 flex flex-col items-center justify-center text-center space-y-6 px-4"
+            style={{ opacity, y }}
+        >
+            {block.lines.map((line, j) => (
+                <p
+                    key={j}
+                    className={`font-heading text-2xl md:text-4xl ${j === block.lines.length - 1 ? 'text-gold' : 'text-white/90'}`}
+                >
+                    {line}
+                </p>
+            ))}
+        </motion.div>
+    );
+}
+
+
 export default function PhotoSection() {
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -43,35 +69,10 @@ export default function PhotoSection() {
         <div ref={containerRef} className="relative bg-[#050505] text-foreground min-h-[300vh] py-24">
             {/* Sticky Text Container */}
             <div className="sticky top-0 h-screen flex flex-col items-center justify-center p-6 z-20 pointer-events-none">
-
                 {/* We map over text blocks, fading them in based on scroll progress */}
-                {textBlocks.map((block, i) => {
-                    // Calculate when each block should appear and disappear
-                    const start = i * 0.33;
-                    const end = start + 0.33;
-                    const mid = start + 0.165;
-
-                    // Using any to avoid complex useTransform typings in this context
-                    const opacity = useTransform(scrollYProgress, [start, mid, end], [0, 1, 0]) as any;
-                    const y = useTransform(scrollYProgress, [start, mid, end], [50, 0, -50]) as any;
-
-                    return (
-                        <motion.div
-                            key={i}
-                            className="absolute inset-0 flex flex-col items-center justify-center text-center space-y-6 px-4"
-                            style={{ opacity, y }}
-                        >
-                            {block.lines.map((line, j) => (
-                                <p
-                                    key={j}
-                                    className={`font-heading text-2xl md:text-4xl ${j === block.lines.length - 1 ? 'text-gold' : 'text-white/90'}`}
-                                >
-                                    {line}
-                                </p>
-                            ))}
-                        </motion.div>
-                    );
-                })}
+                {textBlocks.map((block, i) => (
+                    <TextBlock key={i} block={block} scrollYProgress={scrollYProgress} index={i} />
+                ))}
             </div>
 
             {/* Floating Parallax Photos */}

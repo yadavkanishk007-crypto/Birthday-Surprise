@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Howl, Howler } from "howler";
+import { Howl } from "howler";
 
 interface MusicControllerProps {
     currentSection: string; // "entry", "why", "star", "chat", "photo", "core", "final"

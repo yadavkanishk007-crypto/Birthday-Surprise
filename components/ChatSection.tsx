@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 
 const messages = [
     "Sohniye",
@@ -12,7 +12,7 @@ const messages = [
 ];
 
 export default function ChatSection() {
-    const containerVariants = {
+    const containerVariants: Variants = {
         hidden: { opacity: 0 },
         show: {
             opacity: 1,
@@ -22,7 +22,7 @@ export default function ChatSection() {
         },
     };
 
-    const bubbleVariants = {
+    const bubbleVariants: Variants = {
         hidden: { opacity: 0, y: 20, scale: 0.9 },
         show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, type: "spring" } },
     };
@@ -45,8 +45,8 @@ export default function ChatSection() {
                             key={index}
                             variants={bubbleVariants}
                             className={`max-w-[80%] rounded-2xl px-5 py-3 shadow-md ${index % 2 === 0
-                                    ? "bg-[#1f1f1f] text-[#f5f5f5] self-start rounded-tl-sm border border-white/5" // Received style
-                                    : "bg-gold text-black self-end rounded-tr-sm" // Sent style (Gold)
+                                ? "bg-[#1f1f1f] text-[#f5f5f5] self-start rounded-tl-sm border border-white/5" // Received style
+                                : "bg-gold text-black self-end rounded-tr-sm" // Sent style (Gold)
                                 }`}
                         >
                             <p className="font-body text-base md:text-lg">{msg}</p>

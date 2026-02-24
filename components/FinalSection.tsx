@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Confetti from "react-confetti";
 import { MessageCircle, Play, Pause } from "lucide-react";
 
