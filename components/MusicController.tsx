@@ -45,11 +45,11 @@ export default function MusicController({ currentSection }: MusicControllerProps
 
         // Crossfade Logic based on currentSection
         if (["entry", "why", "star", "chat", "core", "final"].includes(currentSection)) {
-            goodluckAudio.fade(goodluckAudio.volume(), 1, 2000);
+            goodluckAudio.fade(goodluckAudio.volume(), 0.7, 2000);
             terebinAudio.fade(terebinAudio.volume(), 0, 2000);
         } else if (currentSection === "photo") {
             goodluckAudio.fade(goodluckAudio.volume(), 0, 2000);
-            terebinAudio.fade(terebinAudio.volume(), 1, 2000);
+            terebinAudio.fade(terebinAudio.volume(), 0.7, 2000);
         }
     }, [currentSection, goodluckAudio, terebinAudio]);
 

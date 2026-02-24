@@ -42,7 +42,7 @@ function TextBlock({ block, scrollYProgress, index }: { block: { lines: string[]
             {block.lines.map((line, j) => (
                 <p
                     key={j}
-                    className={`font-heading text-2xl md:text-4xl ${j === block.lines.length - 1 ? 'text-gold' : 'text-white/90'}`}
+                    className={`font-heading text-2xl md:text-3xl lg:text-5xl ${j === block.lines.length - 1 ? 'text-gold text-glow' : 'text-white/90'} tracking-wide`}
                 >
                     {line}
                 </p>
@@ -51,6 +51,40 @@ function TextBlock({ block, scrollYProgress, index }: { block: { lines: string[]
     );
 }
 
+interface CinematicPhotoProps {
+    yParallax: MotionValue<number>;
+    top: string;
+    left?: string;
+    right?: string;
+    w: string;
+    h: string;
+    rounded: string;
+    text: string;
+}
+
+const CinematicPhoto = ({ yParallax, top, left, right, w, h, rounded, text }: CinematicPhotoProps) => {
+    return (
+        <motion.div
+            className={`absolute ${top} ${left ? left : ""} ${right ? right : ""} ${w} ${h} ${rounded} overflow-hidden border border-white/10 shadow-2xl`}
+            style={{ y: yParallax }}
+        >
+            <motion.div
+                initial={{ opacity: 0, y: 30, scale: 1, filter: "blur(10px)" }}
+                whileInView={{ opacity: 1, y: 0, scale: 1.12, filter: "blur(0px)" }}
+                transition={{
+                    opacity: { duration: 1.5, ease: "easeOut" },
+                    y: { duration: 1.5, ease: "easeOut" },
+                    filter: { duration: 1.5, ease: "easeOut" },
+                    scale: { duration: 6, ease: "linear" } // Ken Burns continuous slow zoom
+                }}
+                viewport={{ once: true, amount: 0.3 }}
+                className="w-full h-full bg-[#1a1a1a] flex items-center justify-center font-body text-xs text-white/30 film-grain"
+            >
+                {text}
+            </motion.div>
+        </motion.div>
+    );
+};
 
 export default function PhotoSection() {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -66,35 +100,20 @@ export default function PhotoSection() {
     const y3 = useTransform(scrollYProgress, [0, 1], [0, -400]);
 
     return (
-        <div ref={containerRef} className="relative bg-[#050505] text-foreground min-h-[300vh] py-24">
+        <div ref={containerRef} className="relative bg-[#050505] text-foreground min-h-[300vh] py-24 film-grain">
             {/* Sticky Text Container */}
             <div className="sticky top-0 h-screen flex flex-col items-center justify-center p-6 z-20 pointer-events-none">
-                {/* We map over text blocks, fading them in based on scroll progress */}
                 {textBlocks.map((block, i) => (
                     <TextBlock key={i} block={block} scrollYProgress={scrollYProgress} index={i} />
                 ))}
             </div>
 
-            {/* Floating Parallax Photos */}
-            <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none opacity-40">
-
-                {/* Placeholder images - To be replaced by user */}
-                <motion.div className="absolute top-[10%] left-[5%] w-48 h-64 md:w-64 md:h-80 rounded-lg overflow-hidden border border-white/10" style={{ y: y1 }}>
-                    <div className="w-full h-full bg-[#1a1a1a] flex items-center justify-center font-body text-xs text-white/30">Photo 1</div>
-                </motion.div>
-
-                <motion.div className="absolute top-[30%] right-[5%] w-56 h-72 md:w-72 md:h-96 rounded-lg overflow-hidden border border-white/10" style={{ y: y2 }}>
-                    <div className="w-full h-full bg-[#1a1a1a] flex items-center justify-center font-body text-xs text-white/30">Photo 2</div>
-                </motion.div>
-
-                <motion.div className="absolute top-[60%] left-[10%] w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border border-white/10" style={{ y: y3 }}>
-                    <div className="w-full h-full bg-[#1a1a1a] flex items-center justify-center font-body text-xs text-white/30">Photo 3</div>
-                </motion.div>
-
-                <motion.div className="absolute top-[80%] right-[15%] w-48 h-64 md:w-64 md:h-80 rounded-lg overflow-hidden border border-white/10" style={{ y: y1 }}>
-                    <div className="w-full h-full bg-[#1a1a1a] flex items-center justify-center font-body text-xs text-white/30">Photo 4</div>
-                </motion.div>
-
+            {/* Floating Cinematic Parallax Photos */}
+            <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
+                <CinematicPhoto yParallax={y1} top="top-[10%]" left="left-[5%]" w="w-48 md:w-64" h="h-64 md:h-80" rounded="rounded-lg" text="Photo 1" />
+                <CinematicPhoto yParallax={y2} top="top-[30%]" right="right-[5%]" w="w-56 md:w-72" h="h-72 md:h-96" rounded="rounded-lg" text="Photo 2" />
+                <CinematicPhoto yParallax={y3} top="top-[60%]" left="left-[10%]" w="w-64 md:w-80" h="h-64 md:h-80" rounded="rounded-full" text="Photo 3" />
+                <CinematicPhoto yParallax={y1} top="top-[80%]" right="right-[15%]" w="w-48 md:w-64" h="h-64 md:h-80" rounded="rounded-lg" text="Photo 4" />
             </div>
         </div>
     );
