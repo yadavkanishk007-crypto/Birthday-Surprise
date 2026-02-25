@@ -100,7 +100,7 @@ export default function PhotoSection() {
     const y3 = useTransform(scrollYProgress, [0, 1], [0, -400]);
 
     return (
-        <div ref={containerRef} className="relative bg-[#050505] text-foreground min-h-[300vh] py-24 film-grain">
+        <div ref={containerRef} className="relative bg-transparent text-foreground min-h-[300vh] py-24 film-grain">
             {/* Sticky Text Container */}
             <div className="sticky top-0 h-screen flex flex-col items-center justify-center p-6 z-20 pointer-events-none">
                 {textBlocks.map((block, i) => (

@@ -59,7 +59,7 @@ export default function StarGame() {
     }, [taps]);
 
     return (
-        <div className="relative flex flex-col items-center justify-center min-h-screen bg-black text-foreground overflow-hidden py-24">
+        <div className="relative flex flex-col items-center justify-center min-h-screen bg-transparent text-foreground overflow-hidden py-24">
             {/* Screen Glow Flash */}
             <AnimatePresence>
                 {flash && (

@@ -50,7 +50,7 @@ export default function ChatSection() {
     return (
         <div
             ref={containerRef}
-            className="relative flex flex-col items-center justify-center min-h-screen bg-[#0a0a0a] text-foreground py-24 px-4 overflow-hidden"
+            className="relative flex flex-col items-center justify-center min-h-screen bg-transparent text-foreground py-24 px-4 overflow-hidden"
         >
             {/* Ambient Background glow */}
             <div className="absolute top-10 right-10 w-64 h-64 bg-gold/5 rounded-full blur-[100px] pointer-events-none" />
@@ -71,8 +71,8 @@ export default function ChatSection() {
                                     x: { duration: 0.4, ease: "easeInOut" } // Subtle vibration
                                 }}
                                 className={`flex flex-col max-w-[80%] rounded-2xl px-4 py-2 shadow-md ${index % 2 === 0
-                                        ? "bg-[#1f1f1f] text-[#f5f5f5] self-start rounded-tl-sm border border-white/5" // Received style
-                                        : "bg-gold text-black self-end rounded-tr-sm" // Sent style (Gold)
+                                    ? "bg-[#1f1f1f] text-[#f5f5f5] self-start rounded-tl-sm border border-white/5" // Received style
+                                    : "bg-gold text-black self-end rounded-tr-sm" // Sent style (Gold)
                                     }`}
                             >
                                 <p className="font-body text-base md:text-lg">{msg.text}</p>

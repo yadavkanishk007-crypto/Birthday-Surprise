@@ -19,7 +19,7 @@ export default function WhySection() {
     };
 
     return (
-        <div className="relative flex flex-col items-center justify-center min-h-screen bg-background text-foreground px-6 py-20 overflow-hidden">
+        <div className="relative flex flex-col items-center justify-center min-h-screen bg-transparent text-foreground px-6 py-20 overflow-hidden">
             {/* Soft Pink Glow background decoration */}
             <div className="absolute top-1/4 -left-1/4 w-[50vw] h-[50vw] bg-pinkGlow/10 rounded-full blur-[100px] pointer-events-none" />
             <div className="absolute bottom-1/4 -right-1/4 w-[50vw] h-[50vw] bg-gold/10 rounded-full blur-[100px] pointer-events-none" />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "react-confetti";
 import { MessageCircle, Play, Pause } from "lucide-react";
 import { Howl } from "howler";
@@ -11,6 +11,8 @@ export default function FinalSection() {
     const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
     const [isPlayingVoice, setIsPlayingVoice] = useState(false);
     const [voiceAudio, setVoiceAudio] = useState<Howl | null>(null);
+    const [reachedFinal, setReachedFinal] = useState(false);
+    const [showButton, setShowButton] = useState(false);
 
     useEffect(() => {
         setWindowSize({ width: window.innerWidth, height: window.innerHeight });
@@ -22,7 +24,7 @@ export default function FinalSection() {
 
         // Prep Voice Note
         const voice = new Howl({
-            src: ["/audio/voice.mp3"],
+            src: ["/audio/voicenote.mp3", "/audio/voicenote.mp4"],
             html5: true,
             volume: 1,
             onend: () => setIsPlayingVoice(false)
@@ -63,7 +65,7 @@ export default function FinalSection() {
     };
 
     return (
-        <div className="relative flex flex-col items-center justify-center min-h-screen bg-black text-foreground py-24 px-6 overflow-hidden">
+        <div className="relative flex flex-col items-center min-h-screen pt-32 pb-24 text-foreground px-6 overflow-hidden bg-transparent">
             {/* Background decoration */}
             <div className="absolute top-0 right-0 w-[50vw] h-[50vw] bg-pinkGlow/5 rounded-full blur-[120px] pointer-events-none" />
 
@@ -85,7 +87,9 @@ export default function FinalSection() {
                 whileInView="show"
                 viewport={{ once: true, amount: 0.3 }}
                 onViewportEnter={() => {
+                    setReachedFinal(true);
                     setTimeout(() => setShowConfetti(true), 8000);
+                    setTimeout(() => setShowButton(true), 11000);
                 }}
                 className="z-20 flex flex-col items-center text-center max-w-2xl"
             >
@@ -120,50 +124,57 @@ export default function FinalSection() {
                     <p className="font-heading text-2xl text-white/50 mt-4">— K</p>
                 </motion.div>
 
-                {/* Delay button appearance significantly (e.g. 11 seconds from start of viewport enter) */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 11, duration: 2 }}
-                    viewport={{ once: true }}
-                >
-                    <a
-                        href="https://wa.me/?text=I%20honestly%20did%20smile%20%E2%9C%A8"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex items-center gap-3 px-8 py-4 bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] rounded-full hover:bg-[#25D366] hover:text-black hover:scale-105 hover:shadow-[0_0_30px_#d4af37] transition-all duration-500 font-body text-lg group"
-                    >
-                        <MessageCircle className="w-5 h-5 group-hover:animate-pulse" />
-                        Tell me honestly… did you smile?
-                    </a>
-                </motion.div>
+                {/* Delayed Button */}
+                <AnimatePresence>
+                    {showButton && (
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 2 }}
+                        >
+                            <a
+                                href="https://wa.me/?text=I%20honestly%20did%20smile%20%E2%9C%A8"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="flex items-center gap-3 px-8 py-4 bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] rounded-full hover:bg-[#25D366] hover:text-black hover:scale-105 hover:shadow-[0_0_30px_#d4af37] transition-all duration-500 font-body text-lg group"
+                            >
+                                <MessageCircle className="w-5 h-5 group-hover:animate-pulse" />
+                                Tell me honestly… did you smile?
+                            </a>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </motion.div>
 
             {/* Floating Voice Note Button */}
-            <motion.button
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 4, duration: 1 }}
-                onClick={handleVoiceToggle}
-                className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-black/80 backdrop-blur-md border border-gold/30 rounded-full shadow-lg shadow-gold/5 group hover:border-gold transition-colors"
-            >
-                <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-colors">
-                    {isPlayingVoice ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
-                </div>
-                <div className="flex flex-col items-start pr-2">
-                    <span className="font-body text-xs text-gold uppercase tracking-wider">Play this</span>
-                    <div className="w-24 h-1 bg-white/10 rounded-full mt-1 overflow-hidden relative">
-                        {isPlayingVoice && (
-                            <motion.div
-                                initial={{ width: 0 }}
-                                animate={{ width: "100%" }}
-                                transition={{ duration: 7, ease: "linear" }}
-                                className="absolute top-0 left-0 h-full bg-gold rounded-full"
-                            />
-                        )}
-                    </div>
-                </div>
-            </motion.button>
+            <AnimatePresence>
+                {reachedFinal && (
+                    <motion.button
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 2, duration: 1 }}
+                        onClick={handleVoiceToggle}
+                        className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-black/80 backdrop-blur-md border border-gold/30 rounded-full shadow-lg shadow-gold/5 group hover:border-gold transition-colors"
+                    >
+                        <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-colors">
+                            {isPlayingVoice ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
+                        </div>
+                        <div className="flex flex-col items-start pr-2">
+                            <span className="font-body text-xs text-gold uppercase tracking-wider">Play this</span>
+                            <div className="w-24 h-1 bg-white/10 rounded-full mt-1 overflow-hidden relative">
+                                {isPlayingVoice && (
+                                    <motion.div
+                                        initial={{ width: 0 }}
+                                        animate={{ width: "100%" }}
+                                        transition={{ duration: 7, ease: "linear" }}
+                                        className="absolute top-0 left-0 h-full bg-gold rounded-full"
+                                    />
+                                )}
+                            </div>
+                        </div>
+                    </motion.button>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

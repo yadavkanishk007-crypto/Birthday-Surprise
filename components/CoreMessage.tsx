@@ -19,9 +19,9 @@ export default function CoreMessage() {
     };
 
     return (
-        <div className="relative min-h-[250vh] bg-background">
+        <div className="relative min-h-[250vh] bg-transparent">
             {/* The sticky container creates a forced 3-second physical "pause" where the user just has to scroll empty space while the message sits on screen */}
-            <div className="sticky top-0 h-screen flex flex-col items-center justify-center text-foreground py-24 px-6 overflow-hidden">
+            <div className="sticky top-0 h-screen flex flex-col items-center justify-center text-foreground py-10 md:py-24 px-6">
 
                 {/* Subtle slow breathing glow */}
                 <motion.div
@@ -37,7 +37,7 @@ export default function CoreMessage() {
                     viewport={{ once: true, amount: 0.3 }}
                     className="z-10 flex flex-col items-center text-center max-w-2xl"
                 >
-                    <motion.div variants={itemVariants} className="space-y-6 mb-16">
+                    <motion.div variants={itemVariants} className="space-y-4 md:space-y-6 mb-8 md:mb-16">
                         <p className="font-body text-xl md:text-2xl leading-relaxed">
                             Everyone has something lucky.
                         </p>
@@ -46,7 +46,7 @@ export default function CoreMessage() {
                         <p className="font-body text-xl md:text-2xl text-white/70 italic tracking-wide">A place.</p>
                     </motion.div>
 
-                    <motion.div variants={itemVariants} className="mb-20">
+                    <motion.div variants={itemVariants} className="mb-10 md:mb-20">
                         <p className="font-heading text-3xl md:text-5xl leading-relaxed text-gold text-glow">
                             Mine turned out to be a person.
                         </p>
