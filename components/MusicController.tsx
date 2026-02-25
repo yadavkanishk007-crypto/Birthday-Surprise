@@ -44,12 +44,18 @@ export default function MusicController({ currentSection }: MusicControllerProps
         if (!goodluckAudio || !terebinAudio) return;
 
         // Crossfade Logic based on currentSection
-        if (["entry", "why", "star", "chat", "core", "final"].includes(currentSection)) {
+        if (currentSection === "entry") {
+            goodluckAudio.fade(0.3, 0.7, 2500);
+            terebinAudio.fade(terebinAudio.volume(), 0, 2500);
+        } else if (["why", "star", "chat", "core"].includes(currentSection)) {
             goodluckAudio.fade(goodluckAudio.volume(), 0.7, 2500);
             terebinAudio.fade(terebinAudio.volume(), 0, 2500);
         } else if (currentSection === "photo") {
             goodluckAudio.fade(goodluckAudio.volume(), 0, 2500);
-            terebinAudio.fade(terebinAudio.volume(), 0.7, 2500);
+            terebinAudio.fade(terebinAudio.volume(), 0.5, 2500);
+        } else if (currentSection === "final") {
+            goodluckAudio.fade(goodluckAudio.volume(), 0.75, 2500);
+            terebinAudio.fade(terebinAudio.volume(), 0, 2500);
         }
     }, [currentSection, goodluckAudio, terebinAudio]);
 
@@ -67,7 +73,9 @@ export default function MusicController({ currentSection }: MusicControllerProps
         const handleVoiceEnd = () => {
             // Restore based on section
             if (currentSection === "photo") {
-                terebinAudio.fade(terebinAudio.volume(), 0.7, 1000);
+                terebinAudio.fade(terebinAudio.volume(), 0.5, 1000);
+            } else if (currentSection === "final") {
+                goodluckAudio.fade(goodluckAudio.volume(), 0.75, 1000);
             } else {
                 goodluckAudio.fade(goodluckAudio.volume(), 0.7, 1000);
             }

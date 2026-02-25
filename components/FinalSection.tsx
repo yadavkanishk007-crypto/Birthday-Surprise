@@ -64,7 +64,7 @@ export default function FinalSection() {
                 viewport={{ once: true, amount: 0.3 }}
                 onViewportEnter={() => {
                     setTimeout(() => setShowConfetti(true), 8000);
-                    setTimeout(() => setShowButton(true), 11000);
+                    setTimeout(() => setShowButton(true), 14000);
                 }}
                 className="z-20 flex flex-col items-center text-center max-w-2xl"
             >

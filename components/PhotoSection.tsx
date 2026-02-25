@@ -71,12 +71,12 @@ const CinematicPhoto = ({ yParallax, top, left, right, w, h, rounded, text, src 
         >
             <motion.div
                 initial={{ opacity: 0, y: 40, scale: 1, filter: "blur(10px)" }}
-                whileInView={{ opacity: 1, y: 0, scale: 1.1, filter: "blur(0px)" }}
+                whileInView={{ opacity: 1, y: 0, scale: 1.08, filter: "blur(0px)" }}
                 transition={{
                     opacity: { duration: 1.5, ease: "easeOut" },
                     y: { duration: 1.5, ease: "easeOut" },
                     filter: { duration: 1.5, ease: "easeOut" },
-                    scale: { duration: 7, ease: "linear" } // Ken Burns continuous slow zoom
+                    scale: { duration: 8, ease: "linear" } // Ken Burns continuous slow zoom
                 }}
                 viewport={{ once: true, amount: 0.3 }}
                 className="w-full h-full bg-[#1a1a1a] flex items-center justify-center font-body text-xs text-white/30 film-grain relative"

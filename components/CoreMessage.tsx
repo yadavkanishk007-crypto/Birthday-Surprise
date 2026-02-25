@@ -58,7 +58,7 @@ export default function CoreMessage() {
     };
 
     return (
-        <div className="relative min-h-[250vh] bg-transparent">
+        <div className="relative min-h-[450vh] bg-transparent">
             {/* The sticky container creates a forced 3-second physical "pause" where the user just has to scroll empty space while the message sits on screen */}
             <div className="sticky top-0 h-screen flex flex-col items-center justify-center text-foreground py-10 md:py-24 px-6">
 
