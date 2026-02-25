@@ -1,8 +1,47 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Play, Pause } from "lucide-react";
+import { Howl } from "howler";
 
 export default function CoreMessage() {
+    const [isPlayingVoice, setIsPlayingVoice] = useState(false);
+    const [voiceAudio, setVoiceAudio] = useState<Howl | null>(null);
+    const [voiceFinished, setVoiceFinished] = useState(false);
+
+    useEffect(() => {
+        const voice = new Howl({
+            src: ["/audio/voicenote.mp3", "/audio/voicenote.mp4"],
+            html5: true,
+            volume: 1,
+            onend: () => {
+                setIsPlayingVoice(false);
+                setVoiceFinished(true);
+                window.dispatchEvent(new Event("endVoice"));
+            }
+        });
+        setVoiceAudio(voice);
+
+        return () => {
+            voice.unload();
+        };
+    }, []);
+
+    const handleVoiceToggle = () => {
+        if (!voiceAudio) return;
+
+        if (isPlayingVoice) {
+            voiceAudio.pause();
+            setIsPlayingVoice(false);
+            window.dispatchEvent(new Event("endVoice"));
+        } else {
+            voiceAudio.play();
+            setIsPlayingVoice(true);
+            window.dispatchEvent(new Event("playVoice"));
+        }
+    };
+
     const containerVariants = {
         hidden: { opacity: 0 },
         show: {
@@ -58,12 +97,19 @@ export default function CoreMessage() {
                             hidden: { opacity: 0, scale: 0.95, filter: "blur(10px)" },
                             show: { opacity: 1, scale: 1, filter: "blur(0px)", transition: { duration: 2, delay: 2.5 } }
                         }}
-                        className="relative w-64 h-80 md:w-80 md:h-[400px] rounded-2xl overflow-hidden border border-gold/30 mb-8 box-glow z-20"
+                        className="relative w-64 h-80 md:w-80 md:h-[400px] rounded-2xl overflow-hidden border border-gold/30 mb-8 box-glow z-20 group"
                     >
-                        {/* Placeholder for center photo */}
-                        <div className="w-full h-full bg-[#111] flex flex-col items-center justify-center p-4">
-                            <p className="font-body text-sm text-center text-white/40 mb-2">Her Best Photo</p>
-                            <p className="font-heading text-gold text-2xl absolute bottom-6 text-glow">My Good Luck Charm ✨</p>
+                        {/* The actual photo */}
+                        <img
+                            src="https://picsum.photos/seed/bestphoto/600/800"
+                            alt="Her Best Photo"
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-[10s] group-hover:scale-110"
+                        />
+                        {/* Dark overlay for text readability */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+
+                        <div className="absolute inset-0 flex flex-col items-center justify-end p-4">
+                            <p className="font-heading text-gold text-2xl mb-2 text-glow">My Good Luck Charm ✨</p>
                         </div>
                     </motion.div>
                 </motion.div>
@@ -92,6 +138,47 @@ export default function CoreMessage() {
                     ))}
                 </div>
             </div>
+
+            {/* Floating Voice Note Button */}
+            <motion.button
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ delay: 2, duration: 1 }}
+                onClick={handleVoiceToggle}
+                className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-black/80 backdrop-blur-md border border-gold/30 rounded-full shadow-lg shadow-gold/5 group hover:border-gold transition-colors"
+            >
+                <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-colors">
+                    {isPlayingVoice ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
+                </div>
+                <div className="flex flex-col items-start pr-2">
+                    <span className="font-body text-xs text-gold uppercase tracking-wider">Play this</span>
+                    <div className="w-24 h-1 bg-white/10 rounded-full mt-1 overflow-hidden relative">
+                        {isPlayingVoice && (
+                            <motion.div
+                                initial={{ width: 0 }}
+                                animate={{ width: "100%" }}
+                                transition={{ duration: 5, ease: "linear" }}
+                                className="absolute top-0 left-0 h-full bg-gold rounded-full"
+                            />
+                        )}
+                    </div>
+                </div>
+            </motion.button>
+
+            {/* Tiny Emoji Fade-in */}
+            <AnimatePresence>
+                {voiceFinished && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 2 }}
+                        className="fixed bottom-24 right-10 z-50 text-2xl drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+                    >
+                        🙂
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }

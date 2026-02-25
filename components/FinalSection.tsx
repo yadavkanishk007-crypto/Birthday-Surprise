@@ -3,15 +3,11 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Confetti from "react-confetti";
-import { MessageCircle, Play, Pause } from "lucide-react";
-import { Howl } from "howler";
+import { MessageCircle } from "lucide-react";
 
 export default function FinalSection() {
     const [showConfetti, setShowConfetti] = useState(false);
     const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
-    const [isPlayingVoice, setIsPlayingVoice] = useState(false);
-    const [voiceAudio, setVoiceAudio] = useState<Howl | null>(null);
-    const [reachedFinal, setReachedFinal] = useState(false);
     const [showButton, setShowButton] = useState(false);
 
     useEffect(() => {
@@ -22,32 +18,12 @@ export default function FinalSection() {
         };
         window.addEventListener("resize", handleResize);
 
-        // Prep Voice Note
-        const voice = new Howl({
-            src: ["/audio/voicenote.mp3", "/audio/voicenote.mp4"],
-            html5: true,
-            volume: 1,
-            onend: () => setIsPlayingVoice(false)
-        });
-        setVoiceAudio(voice);
-
         return () => {
             window.removeEventListener("resize", handleResize);
-            voice.unload();
         };
     }, []);
 
-    const handleVoiceToggle = () => {
-        if (!voiceAudio) return;
 
-        if (isPlayingVoice) {
-            voiceAudio.pause();
-            setIsPlayingVoice(false);
-        } else {
-            voiceAudio.play();
-            setIsPlayingVoice(true);
-        }
-    };
 
     const containerVariants = {
         hidden: { opacity: 0 },
@@ -87,7 +63,6 @@ export default function FinalSection() {
                 whileInView="show"
                 viewport={{ once: true, amount: 0.3 }}
                 onViewportEnter={() => {
-                    setReachedFinal(true);
                     setTimeout(() => setShowConfetti(true), 8000);
                     setTimeout(() => setShowButton(true), 11000);
                 }}
@@ -146,35 +121,7 @@ export default function FinalSection() {
                 </AnimatePresence>
             </motion.div>
 
-            {/* Floating Voice Note Button */}
-            <AnimatePresence>
-                {reachedFinal && (
-                    <motion.button
-                        initial={{ opacity: 0, y: 50 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 2, duration: 1 }}
-                        onClick={handleVoiceToggle}
-                        className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 bg-black/80 backdrop-blur-md border border-gold/30 rounded-full shadow-lg shadow-gold/5 group hover:border-gold transition-colors"
-                    >
-                        <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-black transition-colors">
-                            {isPlayingVoice ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4 ml-0.5" />}
-                        </div>
-                        <div className="flex flex-col items-start pr-2">
-                            <span className="font-body text-xs text-gold uppercase tracking-wider">Play this</span>
-                            <div className="w-24 h-1 bg-white/10 rounded-full mt-1 overflow-hidden relative">
-                                {isPlayingVoice && (
-                                    <motion.div
-                                        initial={{ width: 0 }}
-                                        animate={{ width: "100%" }}
-                                        transition={{ duration: 7, ease: "linear" }}
-                                        className="absolute top-0 left-0 h-full bg-gold rounded-full"
-                                    />
-                                )}
-                            </div>
-                        </div>
-                    </motion.button>
-                )}
-            </AnimatePresence>
+
         </div>
     );
 }

@@ -60,27 +60,36 @@ interface CinematicPhotoProps {
     h: string;
     rounded: string;
     text: string;
+    src?: string;
 }
 
-const CinematicPhoto = ({ yParallax, top, left, right, w, h, rounded, text }: CinematicPhotoProps) => {
+const CinematicPhoto = ({ yParallax, top, left, right, w, h, rounded, text, src }: CinematicPhotoProps) => {
     return (
         <motion.div
             className={`absolute ${top} ${left ? left : ""} ${right ? right : ""} ${w} ${h} ${rounded} overflow-hidden border border-white/10 shadow-2xl`}
             style={{ y: yParallax }}
         >
             <motion.div
-                initial={{ opacity: 0, y: 30, scale: 1, filter: "blur(10px)" }}
-                whileInView={{ opacity: 1, y: 0, scale: 1.12, filter: "blur(0px)" }}
+                initial={{ opacity: 0, y: 40, scale: 1, filter: "blur(10px)" }}
+                whileInView={{ opacity: 1, y: 0, scale: 1.1, filter: "blur(0px)" }}
                 transition={{
                     opacity: { duration: 1.5, ease: "easeOut" },
                     y: { duration: 1.5, ease: "easeOut" },
                     filter: { duration: 1.5, ease: "easeOut" },
-                    scale: { duration: 6, ease: "linear" } // Ken Burns continuous slow zoom
+                    scale: { duration: 7, ease: "linear" } // Ken Burns continuous slow zoom
                 }}
                 viewport={{ once: true, amount: 0.3 }}
-                className="w-full h-full bg-[#1a1a1a] flex items-center justify-center font-body text-xs text-white/30 film-grain"
+                className="w-full h-full bg-[#1a1a1a] flex items-center justify-center font-body text-xs text-white/30 film-grain relative"
             >
-                {text}
+                {src ? (
+                    <img
+                        src={src}
+                        alt={text}
+                        className="absolute inset-0 w-full h-full object-cover"
+                    />
+                ) : (
+                    text
+                )}
             </motion.div>
         </motion.div>
     );
@@ -110,10 +119,10 @@ export default function PhotoSection() {
 
             {/* Floating Cinematic Parallax Photos */}
             <div className="absolute inset-0 z-10 overflow-hidden pointer-events-none">
-                <CinematicPhoto yParallax={y1} top="top-[10%]" left="left-[5%]" w="w-48 md:w-64" h="h-64 md:h-80" rounded="rounded-lg" text="Photo 1" />
-                <CinematicPhoto yParallax={y2} top="top-[30%]" right="right-[5%]" w="w-56 md:w-72" h="h-72 md:h-96" rounded="rounded-lg" text="Photo 2" />
-                <CinematicPhoto yParallax={y3} top="top-[60%]" left="left-[10%]" w="w-64 md:w-80" h="h-64 md:h-80" rounded="rounded-full" text="Photo 3" />
-                <CinematicPhoto yParallax={y1} top="top-[80%]" right="right-[15%]" w="w-48 md:w-64" h="h-64 md:h-80" rounded="rounded-lg" text="Photo 4" />
+                <CinematicPhoto yParallax={y1} top="top-[10%]" left="left-[5%]" w="w-48 md:w-64" h="h-64 md:h-80" rounded="rounded-lg" text="Photo 1" src="https://picsum.photos/seed/luck1/600/800" />
+                <CinematicPhoto yParallax={y2} top="top-[30%]" right="right-[5%]" w="w-56 md:w-72" h="h-72 md:h-96" rounded="rounded-lg" text="Photo 2" src="https://picsum.photos/seed/luck2/600/800" />
+                <CinematicPhoto yParallax={y3} top="top-[60%]" left="left-[10%]" w="w-64 md:w-80" h="h-64 md:h-80" rounded="rounded-full" text="Photo 3" src="https://picsum.photos/seed/luck3/600/800" />
+                <CinematicPhoto yParallax={y1} top="top-[80%]" right="right-[15%]" w="w-48 md:w-64" h="h-64 md:h-80" rounded="rounded-lg" text="Photo 4" src="https://picsum.photos/seed/luck4/600/800" />
             </div>
         </div>
     );

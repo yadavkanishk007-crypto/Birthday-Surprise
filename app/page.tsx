@@ -18,7 +18,7 @@ export default function Home() {
   // For simplicity here, we'll map components.
 
   return (
-    <main className="bg-background min-h-screen text-foreground font-body overflow-x-hidden">
+    <main className="bg-transparent min-h-screen text-foreground font-body overflow-x-hidden">
       {!hasEntered ? (
         <EntryGate onEnter={() => setHasEntered(true)} />
       ) : (
